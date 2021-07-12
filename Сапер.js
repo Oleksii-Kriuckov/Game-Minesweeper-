@@ -62,29 +62,29 @@ const rightButton = (element) => {
 const neighbourMines = (i) => {
     mines.forEach((e) => {
         if ((i + 1) % 8 == 0) {
-            for (x = i - 8, y = i + 8; x < i - 6, y < i + 10; x++, y++) {
-                if (x == e || y == e) {
-                    counterNeighbour++;
+            for (y = i - 8; y < i + 9; y = y + 8) {
+                for (x = y; x < y + 2; x++) {
+                    if (x == e) {
+                        counterNeighbour++;
+                    }
                 }
-            }
-            if (i == e) {
-                counterNeighbour++;
             }
 
         } else if ((i + 1) % 8 == 1) {
-            for (x = i - 7, y = i + 9; x < i - 5, y < i + 11; x++, y++) {
-                if (x == e || y == e) {
-                    counterNeighbour++;
+            for (y = i - 7; y < i + 10; y = y + 8) {
+                for (x = y; x < y + 2; x++) {
+                    if (x == e) {
+                        counterNeighbour++;
+                    }
                 }
-            }
-            if (i + 2 == e) {
-                counterNeighbour++;
             }
 
         } else {
-            for (x = i - 8, y = i + 8, z = i; x < i - 5, y < i + 11, z < i + 3; x++, y++, z++) {
-                if (x == e || y == e || z == e) {
-                    counterNeighbour++;
+            for (y = i - 8; y < i + 9; y = y + 8) {
+                for (x = y; x < y + 3; x++) {
+                    if (x == e) {
+                        counterNeighbour++;
+                    }
                 }
             }
         }
@@ -144,35 +144,83 @@ const openCell = (i, elem) => {
 
 // Функция открытия соседних ячеек
 const openNeighbour = (index, array) => {
+
     if ((index + 1) % 8 == 0) {
-        for (a = index - 9, b = index + 7; a < index - 7, b < index + 9; a++, b++) {
-            openCell(a, array[a]);
-            openCell(b, array[b]);
+        if (index < 9) {
+            for (a = index - 1, b = index; a < index + 8, b < index + 9; a += 8, b += 8) {
+                openCell(a, array[a]);
+                openCell(b, array[b]);
+            }
+        } else if (index > 60) {
+            for (a = index - 9, b = index - 8; a < index, b < index + 1; a += 8, b += 8) {
+                openCell(a, array[a]);
+                openCell(b, array[b]);
+            }
+        } else {
+            for (a = index - 9, b = index - 8; a < index + 8, b < index + 9; a += 8, b += 8) {
+                openCell(a, array[a]);
+                openCell(b, array[b]);
+            }
         }
-        openCell(index - 1, array[index - 1]);
+
     } else if ((index + 1) % 8 == 1) {
-        for (a = index - 8, b = index + 8; a < index - 6, b < index + 10; a++, b++) {
-            openCell(a, array[a]);
-            openCell(b, array[b]);
+
+        if (index < 2) {
+            for (a = index, b = index + 1; a < index + 9, b < index + 10; a += 8, b += 8) {
+                openCell(a, array[a]);
+                openCell(b, array[b]);
+            }
+        } else if (index>54) {
+            for (a = index - 8, b = index - 7; a < index + 1, b < index + 2; a += 8, b += 8) {
+                openCell(a, array[a]);
+                openCell(b, array[b]);
+            }
+        } else {
+            for (a = index - 8, b = index - 7; a < index + 9, b < index + 10; a += 8, b += 8) {
+                openCell(a, array[a]);
+                openCell(b, array[b]);
+            }
         }
-        openCell(index + 1, array[index + 1]);
 
     } else {
-        for (a = index - 9, b = index + 7, c = index - 1; a < index - 6, b < index + 10, c < index + 2; a++, b++, c++) {
-            openCell(a, array[a]);
-            openCell(b, array[b]);
-            openCell(c, array[c]);
+        if (index < 9) {
+            for (a = index - 1; a < index + 8; a += 8) {
+                for (b = a; b < a +3; b++) {
+                    openCell(b, array[b]);
+                }
+            } 
+        } else if (index>54) {
+            for (a = index - 9; a < index; a += 8) {
+                for (b = a; b < a +3; b++) {
+                    openCell(b, array[b]);
+                }
+            } 
+        } else {
+            for (a = index - 9; a < index + 8; a += 8) {
+                for (b = a; b < a +3; b++) {
+                    openCell(b, array[b]);
+                }
+            } 
         }
     }
+
+    // array[index].className = "cell";
+    // array[index].style.backgroundColor = "lightgrey";
+
 }
-// Функционал правой кнопки мыши
-cells.forEach((elem, index, arr) => {
-    elem.addEventListener('contextmenu', (ev) => {
-        rightButton(ev.target);
-        flagsQuantity.innerHTML = counterFlags;
-        ev.preventDefault();
-    })
-})
+
+//Циклическая  функция открытия ячеек
+const cycle = () => {
+    /* */   if (neighbours.some((z)=> {return z === 0})) {
+            cells.forEach((elem, index, arr) => {
+                if (elem.classList.contains("empty_cell")) {
+                openNeighbour(index, arr)
+                }
+            })
+//            neighbours = new Array(64);
+        }
+    
+}
 
 // Функционал левой кнопки мыши
 cells.forEach((elem, index, array) => {
@@ -180,7 +228,17 @@ cells.forEach((elem, index, array) => {
         if (counterClicks == 0) {
             startOver();
             counterClicks++;
+            
+            // Функционал правой кнопки мыши
+            cells.forEach((elem, index, arr) => {
+                elem.addEventListener('contextmenu', (ev) => {
+                    rightButton(ev.target);
+                    flagsQuantity.innerHTML = counterFlags;
+                    ev.preventDefault();
+                })
+            })
         }
+
 
         if (ev.target.classList.contains("mine")) {
             minesAll.forEach((el) => {
@@ -198,13 +256,17 @@ cells.forEach((elem, index, array) => {
             openCell(index, elem);
             /**/
             if (neighbours[index] == 0) {
-                openNeighbour(index, array);
+                cycle();
+                cycle();
+                cycle();
+                cycle();
+
             }
-            neighbours.forEach((el, ind, arr) => {
+/*            neighbours.forEach((el, ind, arr) => {
                 if (el == 0) {
                     openNeighbour(ind, arr);
                 }
-            })
+            })*/
         }
     })
 })
