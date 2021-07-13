@@ -14,11 +14,9 @@ const mineSettlement = () => {
             for (i = mines.length; i > -1; i--) {
                 if (mine != mines[i - 1]) {
                     mines[j] = mine;
-
                     cells[mine - 1].className = "mine";
-                    //                    cells[mine-1].style.backgroundImage = "unset";
+                    cells[mine-1].style.backgroundImage = "unset";
                     cells[mine - 1].style.backgroundColor = "grey";
-                    //                    cells[mine-1].setAttribute("style", "background-image:unset; background-color:rgb(192, 189, 189)");
                     minesAll[j] = cells[mine - 1];
                 } else {
                     j--;
@@ -28,35 +26,16 @@ const mineSettlement = () => {
         } else {
             mines[j] = mine;
             cells[mine - 1].className = "mine";
-            //cells[mine-1].setAttribute("class", "mine");
-            //            cells[mine-1].style.backgroundImage = "unset";
+            cells[mine-1].style.backgroundImage = "unset";
             cells[mine - 1].style.backgroundColor = "grey";
-
-            //                        cells[mine-1].setAttribute("style", "background-image:unset; background-color:rgb(192, 189, 189)");
             minesAll[j] = cells[mine - 1];
         }
     }
-    let h4 = document.querySelector("h4");
-    h4.innerHTML = mines.join(", ")
-    console.log(minesAll)
-    console.log(neighbours)
+//    console.log(neighbours)
 }
 
 mineSettlement();
 
-const rightButton = (element) => {
-    if (element.style.backgroundImage == 'url("./images/flag.png")') {
-        element.style.backgroundImage = "unset";
-        element.style.backgroundColor = "rgb(192, 189, 189)";
-        counterFlags--;
-    } else if (counterFlags < minesQuantity) {
-        element.style.cssText = `
-                background-image: url(./images/flag.png);
-                background-size: 100%;`
-        counterFlags++;
-    }
-
-}
 
 // Функция вычисления мин в соседних ячейках
 const neighbourMines = (i) => {
@@ -78,7 +57,7 @@ const neighbourMines = (i) => {
                     }
                 }
             }
-
+            
         } else {
             for (y = i - 8; y < i + 9; y = y + 8) {
                 for (x = y; x < y + 3; x++) {
@@ -94,51 +73,54 @@ const neighbourMines = (i) => {
 }
 //Функция открытия ячейки без мин
 const openCell = (i, elem) => {
-    if (!elem.classList.contains("empty_cell")) {
+    if (!elem.classList.contains("empty_cell") && !elem.classList.contains("open_cell")) {
         neighbourMines(i);
 
         if (neighbours[i] !== 0) {
-            elem.style.backgroundColor = "lightgrey";
+            elem.className = "open_cell";
 
             switch (neighbours[i]) {
                 case 1: {
                     elem.style.color = "green"
                 }
                     break;
-                case 2: {
+                    case 2: {
                     elem.style.color = "orange"
                 }
                     break;
-                case 3: {
+                    case 3: {
                     elem.style.color = "red"
                 }
                     break;
-                case 4: {
-                    elem.style.color = "darkblue"
+                    case 4: {
+                        elem.style.color = "darkblue"
                 }
-                    break;
+                break;
                 case 5: {
                     elem.style.color = "darkorchid"
                 }
-                    break;
+                break;
                 case 6: {
                     elem.style.color = "firebrick"
                 }
-                    break;
+                break;
                 case 7: {
                     elem.style.color = "rgb(238, 255, 4)"
                 }
                     break;
-                case 8: {
-                    elem.style.color = "black"
+                    case 8: {
+                        elem.style.color = "black"
                 }
             }
             elem.innerHTML = neighbours[i];
+            counterClicks++;
         } else {
             elem.className = "empty_cell";
-            //            openNeighbour(i, cells);
-
+            counterClicks++;
         }
+    }
+    if (counterClicks==cells.length) {
+        messageVictory();
     }
 }
 
@@ -164,13 +146,13 @@ const openNeighbour = (index, array) => {
         }
 
     } else if ((index + 1) % 8 == 1) {
-
+        
         if (index < 2) {
             for (a = index, b = index + 1; a < index + 9, b < index + 10; a += 8, b += 8) {
                 openCell(a, array[a]);
                 openCell(b, array[b]);
             }
-        } else if (index>54) {
+        } else if (index > 54) {
             for (a = index - 8, b = index - 7; a < index + 1, b < index + 2; a += 8, b += 8) {
                 openCell(a, array[a]);
                 openCell(b, array[b]);
@@ -181,56 +163,64 @@ const openNeighbour = (index, array) => {
                 openCell(b, array[b]);
             }
         }
-
+        
     } else {
         if (index < 9) {
             for (a = index - 1; a < index + 8; a += 8) {
-                for (b = a; b < a +3; b++) {
+                for (b = a; b < a + 3; b++) {
                     openCell(b, array[b]);
                 }
-            } 
-        } else if (index>54) {
+            }
+        } else if (index > 54) {
             for (a = index - 9; a < index; a += 8) {
-                for (b = a; b < a +3; b++) {
+                for (b = a; b < a + 3; b++) {
                     openCell(b, array[b]);
                 }
-            } 
+            }
         } else {
             for (a = index - 9; a < index + 8; a += 8) {
-                for (b = a; b < a +3; b++) {
+                for (b = a; b < a + 3; b++) {
                     openCell(b, array[b]);
                 }
-            } 
+            }
         }
     }
-
-    // array[index].className = "cell";
-    // array[index].style.backgroundColor = "lightgrey";
-
 }
 
-//Циклическая  функция открытия ячеек
-const cycle = () => {
-    /* */   if (neighbours.some((z)=> {return z === 0})) {
-            cells.forEach((elem, index, arr) => {
-                if (elem.classList.contains("empty_cell")) {
-                openNeighbour(index, arr)
-                }
-            })
-//            neighbours = new Array(64);
+// Функция "Вы победили!"
+const messageVictory = () => {
+    let div = document.createElement('div');
+    div.classList.add('victory');
+    div.innerHTML = `Поздравляем! <br> Вы победили!`
+    body.append(div);
+}
+
+const rightButton = (element) => {
+    if (element.style.backgroundImage == 'url("./images/flag.png")') {
+        element.style.backgroundImage = "unset";
+        element.style.backgroundColor = "rgb(192, 189, 189)";
+        counterFlags--;
+        counterClicks--;
+    } else if (counterFlags < minesQuantity) {
+        element.style.cssText = `
+                background-image: url(./images/flag.png);
+                background-size: 100%;`
+        counterFlags++;
+        counterClicks++;
+
+        if (counterClicks==cells.length) {
+            messageVictory();
         }
-    
+    }
 }
-
 // Функционал левой кнопки мыши
-cells.forEach((elem, index, array) => {
+cells.forEach((elem, index) => {
     elem.addEventListener('click', (ev) => {
         if (counterClicks == 0) {
             startOver();
-            counterClicks++;
             
             // Функционал правой кнопки мыши
-            cells.forEach((elem, index, arr) => {
+            cells.forEach((elem) => {
                 elem.addEventListener('contextmenu', (ev) => {
                     rightButton(ev.target);
                     flagsQuantity.innerHTML = counterFlags;
@@ -246,27 +236,27 @@ cells.forEach((elem, index, array) => {
                 el.className = "exploded_mine";
 
             })
-            cells.forEach((elem) => {
+/*            cells.forEach((elem) => {
                 elem.removeEventListener("contextmenu", (ev) => {
                     rightButton(ev.target);
                 })
-
             })
+*/
         } else {
             openCell(index, elem);
-            /**/
+            
             if (neighbours[index] == 0) {
-                cycle();
-                cycle();
-                cycle();
-                cycle();
+                while (neighbours.some((z) => { return z === 0 })) {
 
-            }
-/*            neighbours.forEach((el, ind, arr) => {
-                if (el == 0) {
-                    openNeighbour(ind, arr);
+                    neighbours = new Array(64);
+                    cells.forEach((elem, index, arr) => {
+                        if (elem.classList.contains("empty_cell")) {
+                            openNeighbour(index, arr)
+                        }
+                    })
                 }
-            })*/
+            }
+            console.log(counterClicks)
         }
     })
 })
@@ -288,5 +278,8 @@ const startOver = () => {
         })
         mineSettlement();
         e.target.remove();
+        let div = document.querySelector(".victory")
+        div.remove();
+        
     })
 }

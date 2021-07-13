@@ -14,18 +14,26 @@ body {
     width: 20px;
     height: 20px;
     border: 1px solid black;
-    background-color: rgb(165, 161, 161);
+    background-color: gray;
     text-align: center;
 }
 
+.open_cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    /* background-color: lightgrey; */
+    background-color: rgb(198, 198, 198);
+    font-weight: 800;
+    line-height: 20px;
+    text-align: center;
+}
 .empty_cell {
     width: 20px;
     height: 20px;
     border: 1px solid black;
-    background-color: lightgrey;
-    font-weight: 800;
-    line-height: 20px;
-    text-align: center;
+    /* background-color: lightgrey; */
+    background-color: rgb(198, 198, 198);
 }
 
 h1, p {
@@ -83,3 +91,15 @@ p {
     background-color: aquamarine;
 }
 
+.victory {
+    width: 20%;
+    color: darkgreen;
+    padding: 20px;
+    background-color: lightgreen;
+    position: absolute;
+    left: 40%;
+    top: 30%;
+    text-align: center;
+    box-shadow: 3px 3px 20px seagreen;
+    font-size: xx-large;
+}
