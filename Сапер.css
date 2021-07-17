@@ -22,7 +22,7 @@ body {
     width: 20px;
     height: 20px;
     border: 1px solid black;
-    background-color: rgb(198, 198, 198);
+    background-color: rgb(188, 188, 188);
     font-weight: 800;
     line-height: 20px;
     text-align: center;
@@ -31,7 +31,7 @@ body {
     width: 20px;
     height: 20px;
     border: 1px solid black;
-    background-color: rgb(198, 198, 198);
+    background-color: rgb(188, 188, 188);
 }
 
 h1, p {
@@ -53,7 +53,7 @@ p {
 
 .flag {
     background-image: url(https://i.ibb.co/rMZmDkg/flag.png);
-/*     background-image: url(./flag.png); */
+    /* background-image: url(./images/flag.png); */
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -62,7 +62,7 @@ p {
 
 .mine {
     background-image: url(https://i.ibb.co/n3Kw7RS/mine.png);
-/*     background-image: url(./mine.png); */
+    /* background-image: url(./mine.png); */
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -71,7 +71,7 @@ p {
 
 .exploded_mine {
     background-image: url(https://i.ibb.co/gyvq7GF/exploded-mine.png);
-/*     background-image: url(./exploded\ mine.png); */
+    /* background-image: url(./exploded\ mine.png); */
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -96,7 +96,7 @@ p {
     background-color: lightgreen;
     position: absolute;
     left: 40%;
-    top: 30%;
+    top: 34%;
     text-align: center;
     box-shadow: 3px 3px 20px seagreen;
     font-size: xx-large;
