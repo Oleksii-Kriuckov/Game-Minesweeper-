@@ -22,7 +22,6 @@ body {
     width: 20px;
     height: 20px;
     border: 1px solid black;
-    /* background-color: lightgrey; */
     background-color: rgb(198, 198, 198);
     font-weight: 800;
     line-height: 20px;
@@ -32,7 +31,6 @@ body {
     width: 20px;
     height: 20px;
     border: 1px solid black;
-    /* background-color: lightgrey; */
     background-color: rgb(198, 198, 198);
 }
 
@@ -55,7 +53,7 @@ p {
 
 .flag {
     background-image: url(https://i.ibb.co/rMZmDkg/flag.png);
-    background-image: url(./flag.png);
+/*     background-image: url(./flag.png); */
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -64,7 +62,7 @@ p {
 
 .mine {
     background-image: url(https://i.ibb.co/n3Kw7RS/mine.png);
-    background-image: url(./mine.png);
+/*     background-image: url(./mine.png); */
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -73,7 +71,7 @@ p {
 
 .exploded_mine {
     background-image: url(https://i.ibb.co/gyvq7GF/exploded-mine.png);
-    background-image: url(./exploded\ mine.png);
+/*     background-image: url(./exploded\ mine.png); */
     background-size: 100%;
     width: 20px;
     height: 20px;
