@@ -186,11 +186,14 @@ const openNeighbour = (index, array) => {
 
 // Функционал правой кнопки мыши
 field.addEventListener('contextmenu', (ev) => {
+    ev.preventDefault();
+})
+
+field.addEventListener('contextmenu', (ev) => {
     if (counterGameOver == 0) {
         if (counterClicks > 0) {
             rightButton(ev.target);
             flagsQuantity.innerHTML = counterFlags;
-            ev.preventDefault();
 
             if (counterClicks == cells.length) {
                 messageVictory();
