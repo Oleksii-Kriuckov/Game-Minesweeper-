@@ -15,10 +15,7 @@ const mineSettlement = () => {
             for (i = mines.length; i > -1; i--) {
                 if (mine != mines[i - 1]) {
                     mines[j] = mine;
-                    cells[mine - 1].className = "mine";
-                    cells[mine - 1].style.backgroundImage = "unset";
-                    cells[mine - 1].style.backgroundColor = "grey";
-                    minesAll[j] = cells[mine - 1];
+                 minesAll[j] = cells[mine - 1];
                 } else {
                     j--;
                     break;
@@ -26,12 +23,11 @@ const mineSettlement = () => {
             }
         } else {
             mines[j] = mine;
-            cells[mine - 1].className = "mine";
-            cells[mine - 1].style.backgroundImage = "unset";
-            cells[mine - 1].style.backgroundColor = "grey";
             minesAll[j] = cells[mine - 1];
         }
     }
+    console.log(minesAll)
+    console.log(mines)
 }
 
 mineSettlement();
@@ -72,7 +68,7 @@ const neighbourMines = (i) => {
 }
 //Функция открытия ячейки без мин
 const openCell = (i, elem) => {
-    if (!elem.classList.contains("empty_cell") && !elem.classList.contains("open_cell")) {
+    if (!elem.classList.contains("empty_cell") && !elem.classList.contains("open_cell") && !elem.classList.contains("exploded_mine")) {
         neighbourMines(i);
 
         if (neighbours[i] !== 0) {
@@ -118,7 +114,7 @@ const openCell = (i, elem) => {
             counterClicks++;
         }
     }
-    
+
     if (counterClicks == cells.length) {
         messageVictory();
     }
@@ -195,7 +191,7 @@ field.addEventListener('contextmenu', (ev) => {
             rightButton(ev.target);
             flagsQuantity.innerHTML = counterFlags;
             ev.preventDefault();
-            
+
             if (counterClicks == cells.length) {
                 messageVictory();
             }
@@ -205,15 +201,12 @@ field.addEventListener('contextmenu', (ev) => {
 
 const rightButton = (element) => {
     if (!element.classList.contains("empty_cell") && !element.classList.contains("open_cell")) {
-        if (element.style.backgroundImage == 'url("./flag.png")') {
-            element.style.backgroundImage = "unset";
-            element.style.backgroundColor = "grey";
+        if (element.classList.contains("flag")) {
+            element.className = "cell";
             counterFlags--;
             counterClicks--;
         } else if (counterFlags < minesQuantity) {
-            element.style.cssText = `
-            background-image: url(./flag.png);
-            background-size: 100%;`
+            element.className = "flag";
             counterFlags++;
             counterClicks++;
         }
@@ -221,35 +214,36 @@ const rightButton = (element) => {
 }
 
 // Функционал левой кнопки мыши
-cells.forEach((elem, index, arr) => {
+cells.forEach((elem, index) => {
     elem.addEventListener('click', (ev) => {
         if (counterGameOver == 0) {
             if (counterClicks == 0) {
                 startOver();
             }
 
-            if (ev.target.classList.contains("mine")) {
+            if (mines.some((e) => { return index + 1 == e })) {
                 minesAll.forEach((el) => {
-                    el.removeAttribute("style");
                     el.className = "exploded_mine";
+                    el.innerHTML = "";
                 })
                 counterGameOver++;
             } else {
                 openCell(index, elem);
+            }
 
-                if (neighbours[index] == 0) {
-                    while (neighbours.some((z) => { return z === 0 })) {
+            if (neighbours[index] == 0) {
+                while (neighbours.some((z) => { return z === 0 })) {
 
-                        neighbours = new Array(64);
-                        cells.forEach((elem, index, arr) => {
-                            if (elem.classList.contains("empty_cell")) {
-                                openNeighbour(index, arr)
-                            }
-                        })
-                    }
+                    neighbours = new Array(64);
+                    cells.forEach((elem, index, arr) => {
+                        if (elem.classList.contains("empty_cell")) {
+                            openNeighbour(index, arr)
+                        }
+                    })
                 }
             }
         }
+
     })
 })
 
@@ -258,7 +252,7 @@ const startOver = () => {
     btnStartOver = document.createElement("button");
     btnStartOver.innerHTML = "Начать заново";
     btnStartOver.classList.add("btnStartOver");
-    h1.after(btnStartOver);
+    field.before(btnStartOver);
 
     btnStartOver.addEventListener('click', (e) => {
         mines = []; counterClicks = 0; counterFlags = 0;
@@ -268,14 +262,14 @@ const startOver = () => {
         cells.forEach((el) => {
             el.className = "cell";
             el.innerHTML = "";
-            el.removeAttribute("style");
+
         })
         mineSettlement();
         e.target.remove();
 
-        let div = document.querySelector(".victory")
-        if (div !== null) {
-            div.remove();
+        let victory = document.querySelector(".victory")
+        if (victory !== null) {
+            victory.remove();
         }
     })
 }

@@ -6,7 +6,7 @@ body {
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     width: 160px;
-    margin: 20px auto;
+    margin: 75px auto;
     font-family: 'Rubik', sans-serif;
 }
 
@@ -61,8 +61,8 @@ p {
 }
 
 .mine {
-    background-image: url(https://i.ibb.co/n3Kw7RS/mine.png);
-    /* background-image: url(./mine.png); */
+    /* background-image: url(https://i.ibb.co/n3Kw7RS/mine.png); */
+    background-image: url(./mine.png);
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -70,8 +70,8 @@ p {
 }
 
 .exploded_mine {
-    background-image: url(https://i.ibb.co/gyvq7GF/exploded-mine.png);
-    /* background-image: url(./exploded\ mine.png); */
+    /* background-image: url(https://i.ibb.co/gyvq7GF/exploded-mine.png); */
+    background-image: url(./exploded\ mine.png);
     background-size: 100%;
     width: 20px;
     height: 20px;
@@ -79,9 +79,11 @@ p {
 }
 
 .btnStartOver {
-    width: 150px;
+    width: 11%;
     height: 40px;
     display: block;
+    position: absolute;
+    left: 45%;
     margin: 10px auto;
     border-radius: 5px;
     font-size: 16px;
@@ -96,7 +98,7 @@ p {
     background-color: lightgreen;
     position: absolute;
     left: 40%;
-    top: 34%;
+    top: 38%;
     text-align: center;
     box-shadow: 3px 3px 20px seagreen;
     font-size: xx-large;
