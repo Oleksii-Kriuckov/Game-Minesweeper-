@@ -7,7 +7,7 @@ const cells = document.querySelectorAll(".cell"),
 
 let mines = [], minesAll = [], neighbours = new Array(64), counterClicks = 0, counterFlags = 0, btnStartOver, counterNeighbour = 0, counterGameOver = 0;
 
-//Случайная расстановка мин и исключение повторяющихся клеток
+//Accidental placement of mines and elimination of repetitive cells
 const mineSettlement = () => {
     for (j = 0; j < minesQuantity; j++) {
         let mine = Math.ceil(Math.random() * 64);
@@ -30,7 +30,7 @@ const mineSettlement = () => {
 
 mineSettlement();
 
-// Функция вычисления мин в соседних ячейках
+// Function to compute mines in adjacent cells
 const neighbourMines = (i) => {
     mines.forEach((e) => {
         if ((i + 1) % 8 == 0) {
@@ -64,7 +64,7 @@ const neighbourMines = (i) => {
     neighbours[i] = counterNeighbour;
     counterNeighbour = 0;
 }
-//Функция открытия ячейки без мин
+//Function to open a cell without mines
 const openCell = (i, elem) => {
     if (!elem.classList.contains("empty_cell") && !elem.classList.contains("open_cell") && !elem.classList.contains("exploded_mine")) {
         neighbourMines(i);
@@ -118,7 +118,7 @@ const openCell = (i, elem) => {
     }
 }
 
-// Функция открытия соседних ячеек
+// Function to open an adjacent cell
 const openNeighbour = (index, array) => {
 
     if ((index + 1) % 8 == 0) {
@@ -182,7 +182,7 @@ const openNeighbour = (index, array) => {
 }
 
 
-// Функционал правой кнопки мыши
+// Right mouse button function
 field.addEventListener('contextmenu', (ev) => {
     ev.preventDefault();
 })
@@ -214,7 +214,7 @@ const rightButton = (element) => {
     }
 }
 
-// Функционал левой кнопки мыши
+// Left mouse button function
 cells.forEach((elem, index) => {
     elem.addEventListener('click', (ev) => {
         if (counterGameOver == 0) {
@@ -248,10 +248,10 @@ cells.forEach((elem, index) => {
     })
 })
 
-// Создание и функционал кнопки "Начать заново"
+// Creation and function of button "Start Over"
 const startOver = () => {
     btnStartOver = document.createElement("button");
-    btnStartOver.innerHTML = "Начать заново";
+    btnStartOver.innerHTML = "Start Over";
     btnStartOver.classList.add("btnStartOver");
     field.before(btnStartOver);
 
@@ -275,11 +275,11 @@ const startOver = () => {
     })
 }
 
-// Функция Сообщения о победе
+// Function message about victory
 const messageVictory = () => {
     let div = document.createElement('div');
     div.classList.add('victory');
-    div.innerHTML = `Поздравляем! <br> Вы победили!`;
+    div.innerHTML = `Congratulate! <br> You win!`;
     body.append(div);
     counterGameOver++
 }
