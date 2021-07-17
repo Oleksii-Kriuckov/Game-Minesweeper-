@@ -26,8 +26,6 @@ const mineSettlement = () => {
             minesAll[j] = cells[mine - 1];
         }
     }
-    console.log(minesAll)
-    console.log(mines)
 }
 
 mineSettlement();
