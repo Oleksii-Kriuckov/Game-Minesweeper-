@@ -196,14 +196,14 @@ const messageVictory = () => {
 }
 
 const rightButton = (element) => {
-    if (element.style.backgroundImage == 'url("./images/flag.png")') {
+    if (element.style.backgroundImage == 'url("./flag.png")') {
         element.style.backgroundImage = "unset";
         element.style.backgroundColor = "rgb(192, 189, 189)";
         counterFlags--;
         counterClicks--;
     } else if (counterFlags < minesQuantity) {
         element.style.cssText = `
-                background-image: url(./images/flag.png);
+                background-image: url(./flag.png);
                 background-size: 100%;`
         counterFlags++;
         counterClicks++;
@@ -236,12 +236,6 @@ cells.forEach((elem, index) => {
                 el.className = "exploded_mine";
 
             })
-/*            cells.forEach((elem) => {
-                elem.removeEventListener("contextmenu", (ev) => {
-                    rightButton(ev.target);
-                })
-            })
-*/
         } else {
             openCell(index, elem);
             
@@ -256,7 +250,6 @@ cells.forEach((elem, index) => {
                     })
                 }
             }
-            console.log(counterClicks)
         }
     })
 })
