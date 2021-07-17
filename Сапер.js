@@ -1,10 +1,11 @@
 const cells = document.querySelectorAll(".cell"),
-    body = document.querySelector("body"),
     h1 = document.querySelector("h1"),
+    body = document.querySelector("body"),
     flagsQuantity = document.querySelector(".flags_quantity"),
+    field = document.querySelector(".field"),
     minesQuantity = 10;
 
-let mines = [], minesAll = [], neighbours = new Array(64), counterClicks = 0, counterFlags = 0, btnStartOver, counterNeighbour = 0;
+let mines = [], minesAll = [], neighbours = new Array(64), counterClicks = 0, counterFlags = 0, btnStartOver, counterNeighbour = 0, counterGameOver = 0;
 
 //Случайная расстановка мин и исключение повторяющихся клеток
 const mineSettlement = () => {
@@ -15,7 +16,7 @@ const mineSettlement = () => {
                 if (mine != mines[i - 1]) {
                     mines[j] = mine;
                     cells[mine - 1].className = "mine";
-                    cells[mine-1].style.backgroundImage = "unset";
+                    cells[mine - 1].style.backgroundImage = "unset";
                     cells[mine - 1].style.backgroundColor = "grey";
                     minesAll[j] = cells[mine - 1];
                 } else {
@@ -26,16 +27,14 @@ const mineSettlement = () => {
         } else {
             mines[j] = mine;
             cells[mine - 1].className = "mine";
-            cells[mine-1].style.backgroundImage = "unset";
+            cells[mine - 1].style.backgroundImage = "unset";
             cells[mine - 1].style.backgroundColor = "grey";
             minesAll[j] = cells[mine - 1];
         }
     }
-//    console.log(neighbours)
 }
 
 mineSettlement();
-
 
 // Функция вычисления мин в соседних ячейках
 const neighbourMines = (i) => {
@@ -57,7 +56,7 @@ const neighbourMines = (i) => {
                     }
                 }
             }
-            
+
         } else {
             for (y = i - 8; y < i + 9; y = y + 8) {
                 for (x = y; x < y + 3; x++) {
@@ -78,38 +77,38 @@ const openCell = (i, elem) => {
 
         if (neighbours[i] !== 0) {
             elem.className = "open_cell";
-
+            elem.removeAttribute("style");
             switch (neighbours[i]) {
                 case 1: {
                     elem.style.color = "green"
                 }
                     break;
-                    case 2: {
-                    elem.style.color = "orange"
+                case 2: {
+                    elem.style.color = "darkorange"
                 }
                     break;
-                    case 3: {
+                case 3: {
                     elem.style.color = "red"
                 }
                     break;
-                    case 4: {
-                        elem.style.color = "darkblue"
+                case 4: {
+                    elem.style.color = "darkblue"
                 }
-                break;
+                    break;
                 case 5: {
                     elem.style.color = "darkorchid"
                 }
-                break;
+                    break;
                 case 6: {
                     elem.style.color = "firebrick"
                 }
-                break;
+                    break;
                 case 7: {
                     elem.style.color = "rgb(238, 255, 4)"
                 }
                     break;
-                    case 8: {
-                        elem.style.color = "black"
+                case 8: {
+                    elem.style.color = "black"
                 }
             }
             elem.innerHTML = neighbours[i];
@@ -119,7 +118,8 @@ const openCell = (i, elem) => {
             counterClicks++;
         }
     }
-    if (counterClicks==cells.length) {
+    
+    if (counterClicks == cells.length) {
         messageVictory();
     }
 }
@@ -146,7 +146,7 @@ const openNeighbour = (index, array) => {
         }
 
     } else if ((index + 1) % 8 == 1) {
-        
+
         if (index < 2) {
             for (a = index, b = index + 1; a < index + 9, b < index + 10; a += 8, b += 8) {
                 openCell(a, array[a]);
@@ -163,7 +163,7 @@ const openNeighbour = (index, array) => {
                 openCell(b, array[b]);
             }
         }
-        
+
     } else {
         if (index < 9) {
             for (a = index - 1; a < index + 8; a += 8) {
@@ -187,67 +187,66 @@ const openNeighbour = (index, array) => {
     }
 }
 
-// Функция "Вы победили!"
-const messageVictory = () => {
-    let div = document.createElement('div');
-    div.classList.add('victory');
-    div.innerHTML = `Поздравляем! <br> Вы победили!`
-    body.append(div);
-}
+
+// Функционал правой кнопки мыши
+field.addEventListener('contextmenu', (ev) => {
+    if (counterGameOver == 0) {
+        if (counterClicks > 0) {
+            rightButton(ev.target);
+            flagsQuantity.innerHTML = counterFlags;
+            ev.preventDefault();
+            
+            if (counterClicks == cells.length) {
+                messageVictory();
+            }
+        }
+    }
+})
 
 const rightButton = (element) => {
-    if (element.style.backgroundImage == 'url("./flag.png")') {
-        element.style.backgroundImage = "unset";
-        element.style.backgroundColor = "rgb(192, 189, 189)";
-        counterFlags--;
-        counterClicks--;
-    } else if (counterFlags < minesQuantity) {
-        element.style.cssText = `
-                background-image: url(./flag.png);
-                background-size: 100%;`
-        counterFlags++;
-        counterClicks++;
-
-        if (counterClicks==cells.length) {
-            messageVictory();
+    if (!element.classList.contains("empty_cell") && !element.classList.contains("open_cell")) {
+        if (element.style.backgroundImage == 'url("./flag.png")') {
+            element.style.backgroundImage = "unset";
+            element.style.backgroundColor = "grey";
+            counterFlags--;
+            counterClicks--;
+        } else if (counterFlags < minesQuantity) {
+            element.style.cssText = `
+            background-image: url(./flag.png);
+            background-size: 100%;`
+            counterFlags++;
+            counterClicks++;
         }
     }
 }
+
 // Функционал левой кнопки мыши
-cells.forEach((elem, index) => {
+cells.forEach((elem, index, arr) => {
     elem.addEventListener('click', (ev) => {
-        if (counterClicks == 0) {
-            startOver();
-            
-            // Функционал правой кнопки мыши
-            cells.forEach((elem) => {
-                elem.addEventListener('contextmenu', (ev) => {
-                    rightButton(ev.target);
-                    flagsQuantity.innerHTML = counterFlags;
-                    ev.preventDefault();
+        if (counterGameOver == 0) {
+            if (counterClicks == 0) {
+                startOver();
+            }
+
+            if (ev.target.classList.contains("mine")) {
+                minesAll.forEach((el) => {
+                    el.removeAttribute("style");
+                    el.className = "exploded_mine";
                 })
-            })
-        }
+                counterGameOver++;
+            } else {
+                openCell(index, elem);
 
+                if (neighbours[index] == 0) {
+                    while (neighbours.some((z) => { return z === 0 })) {
 
-        if (ev.target.classList.contains("mine")) {
-            minesAll.forEach((el) => {
-                el.removeAttribute("style");
-                el.className = "exploded_mine";
-
-            })
-        } else {
-            openCell(index, elem);
-            
-            if (neighbours[index] == 0) {
-                while (neighbours.some((z) => { return z === 0 })) {
-
-                    neighbours = new Array(64);
-                    cells.forEach((elem, index, arr) => {
-                        if (elem.classList.contains("empty_cell")) {
-                            openNeighbour(index, arr)
-                        }
-                    })
+                        neighbours = new Array(64);
+                        cells.forEach((elem, index, arr) => {
+                            if (elem.classList.contains("empty_cell")) {
+                                openNeighbour(index, arr)
+                            }
+                        })
+                    }
                 }
             }
         }
@@ -263,6 +262,8 @@ const startOver = () => {
 
     btnStartOver.addEventListener('click', (e) => {
         mines = []; counterClicks = 0; counterFlags = 0;
+        counterGameOver = 0, neighbours = new Array(64);
+
         flagsQuantity.innerHTML = "0";
         cells.forEach((el) => {
             el.className = "cell";
@@ -271,8 +272,19 @@ const startOver = () => {
         })
         mineSettlement();
         e.target.remove();
+
         let div = document.querySelector(".victory")
-        div.remove();
-        
+        if (div !== null) {
+            div.remove();
+        }
     })
+}
+
+// Функция Сообщения о победе
+const messageVictory = () => {
+    let div = document.createElement('div');
+    div.classList.add('victory');
+    div.innerHTML = `Поздравляем! <br> Вы победили!`;
+    body.append(div);
+    counterGameOver++
 }
